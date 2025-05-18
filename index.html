@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>CPS</title>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"name="viewport">
+    <meta name="author"content="DiamondRoPlayz"/>
+    <meta name="description"content="Clicks Per Second Tester"/>
+    <meta name="keywords"content="DiamondRoPlayz, CPS, Clicks Per Second, Click Speed"/>
+    <style>
+      body{
+        background-color: #111;
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-family: 'Lato', sans-serif;
+        user-select: none;
+      }
+      row{
+        display: grid;
+        grid-auto-flow: column;
+        grid-gap: 1rem;
+        align-items: center;
+      }
+      stat{
+        display: grid;
+        place-items: center;
+        grid-gap: 0.5rem;
+      }
+      row div{
+        width: 1px;
+        height: 75%;
+        background-color: #666;
+      }
+    </style>
+  </head>
+  <body x-data="run()" x-init="re()" x-ref="btn" @mousedown="mouseDown" @mouseup="mouseUp">
+    <row>
+      <stat>
+        <abbr title="Clicks Per Second">CPS</abbr>
+        <b x-text="cpsD">69.69</b>
+        <br>
+        <span title="Clicks">Clicks</span>
+        <b x-text="clicks">6969</b>
+      </stat>
+      <div></div>
+      <stat>
+        <span title="Max Clicks Per Second">Max CPS</span>
+        <b x-text="mcpsD">69.69</b>
+        <br>
+        <span title="Seconds Taken">Seconds</span>
+        <b x-text="seconds">69.69s</b>
+      </stat>
+    </row>
+  </body>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+  <script id="rendered-js">
+    const run=()=>{
+      return{
+        cps:0,mcps:0,clicks:0,sT:0,eT:0,
+        get now(){return Date.now()},
+        get active(){return this.now-this.sT},
+        get idle(){return this.now-this.eT},
+        re(){
+          this.clicks=this.cps=this.mcps=0;
+          this.sT=this.now;
+        },
+        mouseDown(){
+          this.clicks++;
+          if(this.idle>1e3)this.re();
+          if(this.active>1e2)this.cps=this.clicks/this.active*1e3;
+          if(this.active>1e3)this.mcps=Math.max(this.cps,this.mcps);
+        },
+        mouseUp(){this.eT=this.now},
+        fix(n,f=2){return n.toFixed(f)},
+        get seconds(){return this.fix(this.active/1e3,1)},
+        get cpsD(){document.title=`${this.fix(this.cps,0)} CPS`;return this.fix(this.cps)},
+        get mcpsD(){return this.fix(this.mcps)} 
+      };
+    };
+  </script>
+</html>
